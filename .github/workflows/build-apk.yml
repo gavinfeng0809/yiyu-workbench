@@ -24,7 +24,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
 
     - name: Install Cordova and project dependencies
       run: |
@@ -38,10 +38,12 @@ jobs:
 
     - name: Prepare www/ directory
       run: |
+        set -x
         rm -rf www
         mkdir -p www
         cp src/index.html www/index.html
         cp src/pinyin_data.js www/pinyin_data.js
+        ls -la www/
 
     - name: Adapt index.html for Cordova
       run: |

@@ -5,8 +5,7 @@
   "description": "个人工作台 - 记账/国学经典/幼儿启蒙/英语学习",
   "main": "index.js",
   "scripts": {
-    "build": "bash build-apk.sh",
-    "prepare": "bash build-apk.sh --prepare-only"
+    "build": "bash build-apk.sh"
   },
   "keywords": [
     "ecosystem:cordova"
@@ -19,11 +18,6 @@
   "cordova": {
     "platforms": [
       "android"
-    ],
-    "plugins": {
-      "cordova-plugin-statusbar": {},
-      "cordova-plugin-device": {},
-      "cordova-plugin-whitelist": {}
-    }
+    ]
   }
 }
