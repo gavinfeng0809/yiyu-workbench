@@ -350,6 +350,8 @@ const store={
 };
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),1800)}
 function speak(text,lang='zh-CN',rate=.85){
+  /* Cordova TTS plugin (Android) — preferred */
+  if(typeof TTS!=='undefined'&&TTS.speak){try{TTS.speak({text:text,locale:lang,rate:rate},()=>{},()=>{});return}catch(e){}}
   if(!('speechSynthesis' in window)){toast('当前浏览器不支持语音朗读');return}
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=rate;

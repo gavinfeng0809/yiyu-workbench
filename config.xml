@@ -20,4 +20,7 @@
 
     <!-- 允许导航和内容加载 -->
     <allow-navigation href="*" />
+
+    <!-- TTS 语音插件 (Android) -->
+    <plugin name="cordova-plugin-tts" spec="^3.0.0" />
 </widget>
