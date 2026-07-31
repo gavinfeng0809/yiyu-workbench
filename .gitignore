@@ -1,0 +1,8 @@
+# Cordova build artifacts
+platforms/
+plugins/
+node_modules/
+www/
+*.apk
+*.keystore
+.gradle/

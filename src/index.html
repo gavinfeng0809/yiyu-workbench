@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>一隅 · 个人工作台</title>
+<style>
+/* ============ 主题变量 ============ */
+:root{
+  --bg:#f5f3ec; --bg-soft:#eeebe0; --surface:#fffdf7; --surface-2:#f8f5ec;
+  --ink:#1d1c18; --ink-2:#4f4d45; --muted:#8b887b; --line:#e4e0d2;
+  --accent:#d97757; --accent-soft:rgba(217,119,87,.13);
+  --green:#788c5d; --green-soft:rgba(120,140,93,.14);
+  --blue:#6a9bcc; --blue-soft:rgba(106,155,204,.14);
+  --red:#b5542d; --red-soft:rgba(181,84,45,.12);
+  --gold:#c9a227; --gold-soft:rgba(201,162,39,.14);
+  --shadow:0 1px 2px rgba(29,28,24,.05),0 10px 30px rgba(29,28,24,.07);
+  --shadow-sm:0 1px 2px rgba(29,28,24,.06),0 4px 12px rgba(29,28,24,.05);
+  --radius:18px; --radius-sm:12px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --serif:"Songti SC","STSong","STZhongsong","SimSun",serif;
+}
+[data-theme="dark"]{
+  --bg:#131311; --bg-soft:#191917; --surface:#1e1e1b; --surface-2:#242422;
+  --ink:#f1efe7; --ink-2:#c3c1b5; --muted:#84827a; --line:#2d2c27;
+  --accent-soft:rgba(217,119,87,.2); --green-soft:rgba(120,140,93,.22);
+  --blue-soft:rgba(106,155,204,.2); --red-soft:rgba(181,84,45,.22); --gold-soft:rgba(201,162,39,.2);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 30px rgba(0,0,0,.4);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100dvh;transition:background .35s,color .35s;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--bg)}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ============ 布局骨架 ============ */
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100dvh}
+.sidebar{position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;padding:26px 16px;background:var(--surface);border-right:1px solid var(--line);z-index:20}
+.brand{display:flex;align-items:center;gap:12px;padding:0 10px 24px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.brand-seal{width:42px;height:42px;border-radius:12px;background:var(--red);color:#fdf8f2;display:grid;place-items:center;font-family:var(--serif);font-size:22px;font-weight:700;box-shadow:var(--shadow-sm);flex:none}
+.brand h1{font-size:17px;letter-spacing:.5px}
+.brand p{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:2px}
+.nav{display:flex;flex-direction:column;gap:4px;flex:1}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;color:var(--ink-2);font-size:14.5px;position:relative;transition:background .2s,color .2s,transform .15s;text-align:left;width:100%}
+.nav-item svg{width:20px;height:20px;flex:none}
+.nav-item:hover{background:var(--surface-2);transform:translateX(2px)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav-item.active::before{content:"";position:absolute;left:-16px;top:20%;bottom:20%;width:3px;border-radius:3px;background:var(--accent)}
+.nav-item[data-mod="guoxue"].active{background:var(--red-soft);color:var(--red)}
+.nav-item[data-mod="guoxue"].active::before{background:var(--red)}
+.nav-item[data-mod="kids"].active{background:var(--green-soft);color:var(--green)}
+.nav-item[data-mod="kids"].active::before{background:var(--green)}
+.nav-item[data-mod="english"].active{background:var(--blue-soft);color:var(--blue)}
+.nav-item[data-mod="english"].active::before{background:var(--blue)}
+.side-foot{padding-top:16px;border-top:1px solid var(--line)}
+.theme-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border-radius:12px;color:var(--ink-2);font-size:14px;transition:background .2s}
+.theme-btn:hover{background:var(--surface-2)}
+.theme-btn svg{width:19px;height:19px}
+
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:15;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 34px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar .crumb{font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px}
+.topbar .date{font-size:13px;color:var(--muted)}
+.topbar .m-theme{display:none;width:38px;height:38px;border-radius:10px;place-items:center;background:var(--surface);border:1px solid var(--line)}
+.topbar .m-theme svg{width:18px;height:18px}
+#view{padding:28px 34px 60px;max-width:1120px;width:100%;margin:0 auto}
+.tabbar{display:none}
+
+/* ============ 通用组件 ============ */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.fade-in{animation:fadeUp .45s cubic-bezier(.16,1,.3,1) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.sec-title{font-size:18px;font-weight:700;margin:26px 0 14px;display:flex;align-items:center;gap:10px}
+.sec-title svg{width:20px;height:20px;color:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;transition:transform .15s,box-shadow .2s,background .2s,opacity .2s}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(217,119,87,.35)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(217,119,87,.4)}
+.btn-ghost{background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.btn-ghost:hover{border-color:var(--muted);color:var(--ink)}
+.btn svg{width:16px;height:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 14px;border-radius:999px;font-size:13px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);transition:all .18s;user-select:none}
+.chip:hover{border-color:var(--muted);transform:translateY(-1px)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.empty{padding:44px 20px;text-align:center;color:var(--muted)}
+.empty svg{width:44px;height:44px;margin-bottom:12px;opacity:.5}
+.empty p{font-size:14px}
+.toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:11px 22px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.16,1,.3,1);z-index:99;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.progress{height:8px;border-radius:8px;background:var(--bg-soft);overflow:hidden}
+.progress>i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--accent),#e8997a);transition:width .5s cubic-bezier(.16,1,.3,1)}
+.icon-btn{width:34px;height:34px;border-radius:10px;display:inline-grid;place-items:center;color:var(--muted);transition:all .18s;flex:none}
+.icon-btn:hover{background:var(--surface-2);color:var(--ink)}
+.icon-btn svg{width:17px;height:17px}
+
+/* ============ 首页 ============ */
+.hero{padding:30px 32px;background:linear-gradient(135deg,var(--surface),var(--surface-2));position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-soft),transparent 70%)}
+.hero h2{font-size:26px;letter-spacing:.5px}
+.hero h2 em{font-style:normal;color:var(--accent)}
+.hero p{color:var(--muted);font-size:14px;margin-top:8px}
+.dash-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:18px}
+.dash-card{padding:20px 22px;transition:transform .2s,box-shadow .25s;position:relative}
+.dash-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.dc-head h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.dc-head h3 svg{width:17px;height:17px}
+.dc-head .more{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:3px}
+.dc-head .more svg{width:13px;height:13px}
+.dc-head .more:hover{color:var(--accent)}
+.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+.mini-money{display:flex;gap:10px}
+.mini-money .mm{flex:1;padding:12px 14px;border-radius:var(--radius-sm);background:var(--surface-2)}
+.mm .k{font-size:12px;color:var(--muted)}
+.mm .v{font-size:19px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.mm .v.out{color:var(--red)}.mm .v.in{color:var(--green)}
+.quote-card{font-family:var(--serif)}
+.quote-big{font-size:21px;line-height:1.9;font-weight:600}
+.quote-src{margin-top:10px;font-size:13.5px;color:var(--muted);text-align:right}
+.quote-actions{display:flex;justify-content:flex-end;margin-top:8px}
+.learn-bars{display:flex;flex-direction:column;gap:16px}
+.lb .row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+.lb .row b{font-variant-numeric:tabular-nums}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.quick{padding:18px 12px;text-align:center;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--line);transition:all .2s;width:100%}
+.quick:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.quick .qi{width:42px;height:42px;margin:0 auto 10px;border-radius:12px;display:grid;place-items:center}
+.quick .qi svg{width:21px;height:21px}
+.quick span{font-size:13px;font-weight:600}
+.qi.o{background:var(--accent-soft);color:var(--accent)}
+.qi.r{background:var(--red-soft);color:var(--red)}
+.qi.g{background:var(--green-soft);color:var(--green)}
+.qi.b{background:var(--blue-soft);color:var(--blue)}
+
+/* ============ 记账 ============ */
+.money-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.stat{padding:20px 22px}
+.stat .k{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.stat .k svg{width:15px;height:15px}
+.stat .v{font-size:27px;font-weight:800;margin-top:8px;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.stat .sub{font-size:12px;color:var(--muted);margin-top:5px}
+.money-charts{display:grid;grid-template-columns:1fr 1.2fr;gap:16px;margin-top:16px}
+.chart-card{padding:20px 22px}
+.chart-card h4{font-size:14.5px;font-weight:700;margin-bottom:14px}
+.donut-wrap{display:flex;align-items:center;gap:22px}
+.donut-wrap svg{width:150px;height:150px;flex:none}
+.legend{display:flex;flex-direction:column;gap:9px;flex:1;min-width:0}
+.legend .li{display:flex;align-items:center;gap:9px;font-size:13px}
+.legend .dot{width:10px;height:10px;border-radius:4px;flex:none}
+.legend .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.legend .pc{color:var(--muted);font-variant-numeric:tabular-nums}
+.bars{width:100%}
+.add-form{margin-top:16px;padding:22px}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{padding:8px 22px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--muted);transition:all .2s}
+.seg button.on-out{background:var(--red);color:#fff;box-shadow:0 3px 10px rgba(181,84,45,.35)}
+.seg button.on-in{background:var(--green);color:#fff;box-shadow:0 3px 10px rgba(120,140,93,.35)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.form-grid .full{grid-column:1/-1}
+.f-label{font-size:12.5px;color:var(--muted);margin-bottom:7px;display:block}
+.records{margin-top:16px}
+.month-nav{display:flex;align-items:center;gap:6px}
+.month-nav b{min-width:110px;text-align:center;font-size:15px;font-variant-numeric:tabular-nums}
+.day-group{margin-bottom:6px}
+.day-head{display:flex;justify-content:space-between;padding:14px 6px 8px;font-size:12.5px;color:var(--muted)}
+.rec{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);transition:background .15s}
+.rec:last-child{border-bottom:none}
+.rec:hover{background:var(--surface-2)}
+.rec .badge{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:15px;font-weight:700;color:#fff;flex:none}
+.rec .info{flex:1;min-width:0}
+.rec .cat{font-size:14.5px;font-weight:600}
+.rec .note{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.rec .amt{font-size:15.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.rec .amt.out{color:var(--red)}.rec .amt.in{color:var(--green)}
+.rec .del{opacity:0}
+.rec:hover .del{opacity:1}
+
+/* ============ 国学 ============ */
+.daily-quote{padding:34px 36px;font-family:var(--serif);background:linear-gradient(120deg,var(--surface),var(--surface-2));position:relative;overflow:hidden}
+.daily-quote::before{content:"每日一句";position:absolute;top:18px;right:24px;font-size:12px;letter-spacing:4px;color:var(--muted)}
+.daily-quote .dq{font-size:24px;line-height:2;font-weight:600}
+.daily-quote .ds{margin-top:12px;font-size:14px;color:var(--muted);text-align:right}
+.classic-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.classic-item{padding:20px 22px;display:flex;gap:16px;align-items:flex-start;transition:all .2s;text-align:left;width:100%}
+.classic-item:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.classic-item .ci-seal{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-family:var(--serif);font-size:19px;font-weight:700;color:#fff;flex:none}
+.classic-item h4{font-size:15.5px;font-weight:700}
+.classic-item .meta{font-size:12.5px;color:var(--muted);margin-top:5px}
+.classic-item .intro{font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.read-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.read-head h2{font-family:var(--serif);font-size:23px;flex:1}
+.font-ctl{display:flex;align-items:center;gap:4px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.font-ctl button{padding:5px 11px;font-size:13px;border-radius:8px;color:var(--ink-2)}
+.font-ctl button:hover{background:var(--surface)}
+.reader{padding:36px 42px;font-family:var(--serif)}
+.reader .r-title{text-align:center;font-size:26px;font-weight:700;letter-spacing:2px}
+.reader .r-author{text-align:center;color:var(--muted);font-size:14.5px;margin-top:10px;letter-spacing:1px}
+.reader .r-body{margin-top:30px;line-height:2.15;white-space:pre-wrap}
+.reader .r-body.poem{text-align:center;line-height:2.3}
+.fav-mark.on{color:var(--gold)}
+
+/* ============ 启蒙 & 英语 ============ */
+.learn-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.learn-progress{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:14px 18px}
+.learn-progress .txt{font-size:13px;color:var(--ink-2);white-space:nowrap}
+.learn-progress .progress{flex:1}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.flip{perspective:900px;height:170px;position:relative}
+.flip-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.1,.2,1)}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px}
+.face.back{transform:rotateY(180deg);background:var(--surface-2)}
+.face .zi{font-family:var(--serif);font-size:52px;font-weight:700;line-height:1}
+.face .py{font-size:15px;color:var(--accent);font-weight:600}
+.face .wd{font-size:13px;color:var(--ink-2)}
+.face .num-big{font-size:46px;font-weight:800;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+.face .dots{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:100px;margin-top:6px}
+.face .dots i{width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.card-tools{position:absolute;top:8px;right:8px;display:flex;gap:4px;z-index:3}
+.card-tools .icon-btn{width:30px;height:30px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
+.card-tools .icon-btn.done{color:var(--green);background:var(--green-soft)}
+.color-tile{height:130px;border-radius:var(--radius);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.color-tile:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.color-tile .cn{font-size:19px;font-weight:700}
+.color-tile .en{font-size:12.5px;opacity:.85;margin-top:2px}
+.py-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px}
+.py-cell{padding:16px 8px;text-align:center;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--line);font-size:18px;font-weight:600;transition:all .18s;cursor:pointer}
+.py-cell:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
+.py-cell small{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:4px}
+.group-label{font-size:14px;font-weight:700;margin:20px 0 10px;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.group-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.wflip{perspective:900px;height:168px;position:relative}
+.wface .word{font-size:24px;font-weight:800;letter-spacing:.5px}
+.wface .phon{font-size:13.5px;color:var(--muted);margin-top:4px}
+.wface .mean{font-size:19px;font-weight:700}
+.wface .ex{font-size:12.5px;color:var(--ink-2);text-align:center;line-height:1.7;margin-top:8px}
+.wface .ex i{display:block;font-style:normal;color:var(--muted)}
+.daily-word{padding:24px 26px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:18px;background:linear-gradient(120deg,var(--surface),var(--surface-2))}
+.daily-word .dw-main{flex:1;min-width:200px}
+.daily-word .dw-tag{font-size:11px;letter-spacing:3px;color:var(--muted)}
+.daily-word .dw-word{font-size:30px;font-weight:800;margin-top:6px}
+.daily-word .dw-phon{color:var(--muted);font-size:14px;margin-top:4px}
+.daily-word .dw-mean{font-size:16px;margin-top:8px;color:var(--ink-2)}
+.daily-word .dw-ex{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.7}
+
+/* ============ 响应式 ============ */
+@media (max-width:960px){
+  .money-charts{grid-template-columns:1fr}
+  .dash-grid>.span-4,.dash-grid>.span-5,.dash-grid>.span-6,.dash-grid>.span-7,.dash-grid>.span-8{grid-column:span 12}
+  .classic-list{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .topbar{padding:14px 18px}
+  .topbar .m-theme{display:grid}
+  #view{padding:20px 16px 110px}
+  .tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;font-size:10.5px;color:var(--muted);border-radius:10px;transition:color .2s}
+  .tab-item svg{width:21px;height:21px}
+  .tab-item.active{color:var(--accent);font-weight:600}
+  .money-stats{grid-template-columns:1fr}
+  .quick-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .donut-wrap{flex-direction:column}
+  .reader{padding:24px 20px}
+  .daily-quote{padding:26px 22px}
+  .daily-quote .dq{font-size:20px}
+  .hero h2{font-size:22px}
+  .card-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .word-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){
+  .word-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+/* ============ 拼音标注样式 ============ */
+ruby{font-size:inherit;ruby-align:center;ruby-position:over;vertical-align:bottom}
+ruby rt{font-size:.62em;font-weight:600;color:var(--accent);line-height:1.4;letter-spacing:.02em;user-select:none;opacity:.92}
+ruby rt:hover{color:var(--red)}
+.no-pinyin ruby rt{display:none}
+.no-pinyin ruby{font-size:inherit}
+.r-line{margin:12px 0;line-height:2.8;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.r-line ruby{white-space:nowrap;padding:0 1px}
+.reader .r-body{font-family:var(--serif);letter-spacing:.06em;padding:8px 0}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#b5542d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script src="pinyin_data.js"></script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-seal">隅</div>
+      <div>
+        <h1>一隅工作台</h1>
+        <p>PERSONAL DESK</p>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <button class="theme-btn" id="themeBtn"></button>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb" id="crumb">首页</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="date" id="topDate"></span>
+        <button class="m-theme" id="mThemeBtn" aria-label="切换主题"></button>
+      </div>
+    </header>
+    <main id="view"></main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar"></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   一隅 · 个人工作台 — 单文件应用
+   模块：首页 / 记账 / 国学经典 / 幼儿启蒙 / 英语学习
+   ================================================================ */
+'use strict';
+
+/* ---------- 工具 ---------- */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>'¥'+Number(n||0).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const todayStr=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const monthStr=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+const WEEK=['日','一','二','三','四','五','六'];
+const store={
+  get(k,d){try{const v=localStorage.getItem('yiyu_'+k);return v===null?d:JSON.parse(v)}catch{return d}},
+  set(k,v){localStorage.setItem('yiyu_'+k,JSON.stringify(v))}
+};
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),1800)}
+function speak(text,lang='zh-CN',rate=.85){
+  if(!('speechSynthesis' in window)){toast('当前浏览器不支持语音朗读');return}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=rate;
+  /* 优先选择好听的女声 */
+  const voices=speechSynthesis.getVoices();
+  const preferred=voices.find(v=>v.lang.startsWith(lang.split('-')[0])&&/female|woman|女|xiaoxiao|xiaoyi|zhiyu|tingting|yaoyao|mei-jia|samantha|karen|moira/i.test(v.name.toLowerCase()+v.voiceURI.toLowerCase()));
+  const fallback=voices.find(v=>v.lang===lang)||voices.find(v=>v.lang.startsWith(lang.split('-')[0]));
+  if(preferred)u.voice=preferred;else if(fallback)u.voice=fallback;
+  speechSynthesis.speak(u);
+}
+/* 确保 voices 列表加载完毕（Chrome 异步加载） */
+if('speechSynthesis' in window&&speechSynthesis.onvoiceschanged!==undefined)
+  speechSynthesis.onvoiceschanged=()=>{};
+
+/* ---------- SVG 图标 ---------- */
+const IC={
+  home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>',
+  money:'<rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/>',
+  book:'<path d="M12 6c-1.5-1.8-3.9-2.5-8-2.5v15c4.1 0 6.5.7 8 2.5 1.5-1.8 3.9-2.5 8-2.5v-15c-4.1 0-6.5.7-8 2.5z"/><path d="M12 6v15"/>',
+  blocks:'<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><circle cx="17" cy="17" r="4"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/>',
+  sun:'<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/>',
+  moon:'<path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>',
+  check:'<path d="M4 12.5 9.5 18 20 6.5"/>',
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  vol:'<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+  star:'<path d="M12 3.5 14.7 9l6 .6-4.5 4 1.3 5.9L12 16.4l-5.5 3.1L7.8 13.6l-4.5-4 6-.6z"/>',
+  chl:'<path d="M14.5 6l-6 6 6 6"/>',
+  chr:'<path d="M9.5 6l6 6-6 6"/>',
+  trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  pie:'<path d="M12 3v9h9"/><circle cx="12" cy="12" r="9"/>',
+  refresh:'<path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/>',
+  pen:'<path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M13.5 7.5l3 3"/>',
+  spark:'<path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'
+};
+const icon=(n,st='')=>`<svg style="${st}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]||''}</svg>`;
+
+/* ================================================================
+   数据 — 国学经典
+   ================================================================ */
+const QUOTES=[
+ ['学而时习之，不亦说乎？有朋自远方来，不亦乐乎？','《论语·学而》'],
+ ['三人行，必有我师焉。择其善者而从之，其不善者而改之','《论语·述而》'],
+ ['己所不欲，勿施于人','《论语·卫灵公》'],
+ ['知者不惑，仁者不忧，勇者不惧','《论语·子罕》'],
+ ['君子坦荡荡，小人长戚戚','《论语·述而》'],
+ ['温故而知新，可以为师矣','《论语·为政》'],
+ ['学而不思则罔，思而不学则殆','《论语·为政》'],
+ ['敏而好学，不耻下问','《论语·公冶长》'],
+ ['吾日三省吾身：为人谋而不忠乎？与朋友交而不信乎？传不习乎？','《论语·学而》'],
+ ['道可道，非常道；名可名，非常名','《道德经·第一章》'],
+ ['上善若水，水善利万物而不争','《道德经·第八章》'],
+ ['千里之行，始于足下','《道德经·第六十四章》'],
+ ['知人者智，自知者明。胜人者有力，自胜者强','《道德经·第三十三章》'],
+ ['合抱之木，生于毫末；九层之台，起于累土','《道德经·第六十四章》'],
+ ['祸兮福之所倚，福兮祸之所伏','《道德经·第五十八章》'],
+ ['天行健，君子以自强不息','《周易·乾卦》'],
+ ['地势坤，君子以厚德载物','《周易·坤卦》'],
+ ['穷则独善其身，达则兼善天下','《孟子·尽心上》'],
+ ['生于忧患，死于安乐','《孟子·告子下》'],
+ ['老吾老以及人之老，幼吾幼以及人之幼','《孟子·梁惠王上》'],
+ ['路漫漫其修远兮，吾将上下而求索','屈原《离骚》'],
+ ['不积跬步，无以至千里；不积小流，无以成江海','《荀子·劝学》'],
+ ['锲而舍之，朽木不折；锲而不舍，金石可镂','《荀子·劝学》'],
+ ['勿以恶小而为之，勿以善小而不为','《三国志·蜀书》'],
+ ['非淡泊无以明志，非宁静无以致远','诸葛亮《诫子书》'],
+ ['读书破万卷，下笔如有神','杜甫《奉赠韦左丞丈二十二韵》'],
+ ['会当凌绝顶，一览众山小','杜甫《望岳》'],
+ ['海内存知己，天涯若比邻','王勃《送杜少府之任蜀州》'],
+ ['欲穷千里目，更上一层楼','王之涣《登鹳雀楼》'],
+ ['少壮不努力，老大徒伤悲','汉乐府《长歌行》'],
+ ['黑发不知勤学早，白首方悔读书迟','颜真卿《劝学诗》'],
+ ['问渠那得清如许，为有源头活水来','朱熹《观书有感》'],
+ ['纸上得来终觉浅，绝知此事要躬行','陆游《冬夜读书示子聿》']
+];
+const CLASSICS=[
+ {id:'szj',cat:'启蒙',seal:'三',color:'#b5542d',title:'三字经',author:'南宋 · 王应麟',intro:'中国传统蒙学三大读物之一，全文422句，三字一句，朗朗上口，涵盖做人、求学、常识。',
+  full:true,linesKey:'szj'},
+ {id:'dzg',cat:'启蒙',seal:'弟',color:'#c9a227',title:'弟子规',author:'清 · 李毓秀',intro:'依据孔子教诲编成的蒙学全文，讲为人子弟在家、处世、求学的礼仪规范。',
+  full:true,linesKey:'dzg'},
+ {id:'qzw',cat:'启蒙',seal:'千',color:'#788c5d',title:'千字文',author:'南北朝 · 周兴嗣',intro:'一千个不重复汉字组成的韵文全文，四字一句，对仗工整，文采斐然。',
+  full:true,linesKey:'qzw'},
+ {id:'dx',cat:'四书',seal:'大',color:'#6a9bcc',title:'大学',author:'（开篇）',intro:'「三纲领、八条目」——儒家修身治国平天下的总纲。',
+  body:'大学之道，在明明德，在亲民，在止于至善。\n\n知止而后有定，定而后能静，静而后能安，安而后能虑，虑而后能得。物有本末，事有终始，知所先后，则近道矣。\n\n古之欲明明德于天下者，先治其国；欲治其国者，先齐其家；欲齐其家者，先修其身；欲修其身者，先正其心；欲正其心者，先诚其意；欲诚其意者，先致其知；致知在格物。'},
+ {id:'ly',cat:'四书',seal:'论',color:'#d97757',title:'论语十则',author:'春秋 · 孔子门人辑录',intro:'半部论语治天下。选录最脍炙人口的十则，常读常新。',
+  body:'子曰：「学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？」\n\n子曰：「温故而知新，可以为师矣。」\n\n子曰：「学而不思则罔，思而不学则殆。」\n\n子曰：「由，诲女知之乎？知之为知之，不知为不知，是知也。」\n\n曾子曰：「吾日三省吾身：为人谋而不忠乎？与朋友交而不信乎？传不习乎？」\n\n子曰：「三人行，必有我师焉。择其善者而从之，其不善者而改之。」\n\n子曰：「君子食无求饱，居无求安，敏于事而慎于言，就有道而正焉，可谓好学也已。」\n\n子曰：「不患人之不己知，患不知人也。」\n\n子曰：「君子喻于义，小人喻于利。」\n\n子曰：「己所不欲，勿施于人。」'},
+ {id:'jys',cat:'唐诗',seal:'静',color:'#4a6fa5',title:'静夜思',author:'唐 · 李白',poem:1,intro:'二十字写尽千古乡愁。',
+  body:'床前明月光，疑是地上霜。\n举头望明月，低头思故乡。'},
+ {id:'cx',cat:'唐诗',seal:'春',color:'#788c5d',title:'春晓',author:'唐 · 孟浩然',poem:1,intro:'春日清晨的一幅速写，清新自然。',
+  body:'春眠不觉晓，处处闻啼鸟。\n夜来风雨声，花落知多少。'},
+ {id:'dgql',cat:'唐诗',seal:'登',color:'#c9a227',title:'登鹳雀楼',author:'唐 · 王之涣',poem:1,intro:'登高望远，哲理与气象并存。',
+  body:'白日依山尽，黄河入海流。\n欲穷千里目，更上一层楼。'},
+ {id:'ye',cat:'唐诗',seal:'鹅',color:'#d97757',title:'咏鹅',author:'唐 · 骆宾王',poem:1,intro:'七岁神童之作，童趣盎然。',
+  body:'鹅，鹅，鹅，曲项向天歌。\n白毛浮绿水，红掌拨清波。'},
+ {id:'mn',cat:'唐诗',seal:'悯',color:'#b5542d',title:'悯农',author:'唐 · 李绅',poem:1,intro:'一粥一饭，当思来处不易。',
+  body:'锄禾日当午，汗滴禾下土。\n谁知盘中餐，粒粒皆辛苦。'},
+ {id:'xs',cat:'唐诗',seal:'相',color:'#c0392b',title:'相思',author:'唐 · 王维',poem:1,intro:'借红豆寄相思，语浅情深。',
+  body:'红豆生南国，春来发几枝。\n愿君多采撷，此物最相思。'},
+ {id:'wls',cat:'唐诗',seal:'瀑',color:'#6a9bcc',title:'望庐山瀑布',author:'唐 · 李白',poem:1,intro:'飞流直下三千尺的浪漫想象。',
+  body:'日照香炉生紫烟，遥看瀑布挂前川。\n飞流直下三千尺，疑是银河落九天。'},
+ {id:'zbdc',cat:'唐诗',seal:'朝',color:'#16a085',title:'早发白帝城',author:'唐 · 李白',poem:1,intro:'千里江陵一日还的轻快与畅快。',
+  body:'朝辞白帝彩云间，千里江陵一日还。\n两岸猿声啼不住，轻舟已过万重山。'},
+ {id:'jx',cat:'唐诗',seal:'雪',color:'#7f8c8d',title:'江雪',author:'唐 · 柳宗元',poem:1,intro:'千万孤独，尽在一叶孤舟。',
+  body:'千山鸟飞绝，万径人踪灭。\n孤舟蓑笠翁，独钓寒江雪。'},
+ {id:'sx',cat:'唐诗',seal:'山',color:'#d35400',title:'山行',author:'唐 · 杜牧',poem:1,intro:'霜叶红于二月花，秋日胜春朝。',
+  body:'远上寒山石径斜，白云生处有人家。\n停车坐爱枫林晚，霜叶红于二月花。'},
+ {id:'sdg',cat:'宋词',seal:'月',color:'#4a6fa5',title:'水调歌头 · 明月几时有',author:'宋 · 苏轼',intro:'千古中秋第一词，旷达与深情并存。',
+  body:'明月几时有？把酒问青天。不知天上宫阙，今夕是何年。我欲乘风归去，又恐琼楼玉宇，高处不胜寒。起舞弄清影，何似在人间。\n\n转朱阁，低绮户，照无眠。不应有恨，何事长向别时圆？人有悲欢离合，月有阴晴圆缺，此事古难全。但愿人长久，千里共婵娟。'},
+ {id:'rml',cat:'宋词',seal:'梦',color:'#e84393',title:'如梦令 · 常记溪亭日暮',author:'宋 · 李清照',intro:'少女时代的烂漫记忆，清新别致。',
+  body:'常记溪亭日暮，沉醉不知归路。\n兴尽晚回舟，误入藕花深处。\n争渡，争渡，惊起一滩鸥鹭。'}
+];
+
+/* ================================================================
+   数据 — 幼儿启蒙
+   ================================================================ */
+const HANZI=[
+ ['一','yī','一个'],['二','èr','二月'],['三','sān','三天'],['四','sì','四季'],['五','wǔ','五月'],
+ ['六','liù','六个'],['七','qī','七夕'],['八','bā','八方'],['九','jiǔ','九月'],['十','shí','十分'],
+ ['人','rén','大人'],['口','kǒu','人口'],['手','shǒu','小手'],['足','zú','足球'],['目','mù','目光'],
+ ['耳','ěr','耳朵'],['日','rì','日子'],['月','yuè','月亮'],['水','shuǐ','喝水'],['火','huǒ','大火'],
+ ['木','mù','木头'],['金','jīn','金色'],['土','tǔ','土地'],['山','shān','大山'],['石','shí','石头'],
+ ['田','tián','田地'],['大','dà','大象'],['小','xiǎo','小鸟'],['多','duō','许多'],['少','shǎo','多少'],
+ ['上','shàng','上面'],['下','xià','下面'],['左','zuǒ','左边'],['右','yòu','右边'],['天','tiān','天空'],
+ ['地','dì','大地'],['爸','bà','爸爸'],['妈','mā','妈妈'],['我','wǒ','我们'],['你','nǐ','你们']
+];
+const NUM_WORDS=['零','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+const NUM_EN=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
+const COLORS=[
+ ['红色','hóng sè','red','#e74c3c','#fff'],['橙色','chéng sè','orange','#e67e22','#fff'],['黄色','huáng sè','yellow','#f1c40f','#5c4a00'],
+ ['绿色','lǜ sè','green','#27ae60','#fff'],['青色','qīng sè','cyan','#16a085','#fff'],['蓝色','lán sè','blue','#3498db','#fff'],
+ ['紫色','zǐ sè','purple','#9b59b6','#fff'],['粉色','fěn sè','pink','#fd79a8','#7a1e45'],['棕色','zōng sè','brown','#8d6e63','#fff'],
+ ['黑色','hēi sè','black','#2d3436','#fff'],['白色','bái sè','white','#f5f5f0','#555'],['灰色','huī sè','gray','#95a5a6','#fff']
+];
+const PINYIN={
+ '声母（23）':['b','p','m','f','d','t','n','l','g','k','h','j','q','x','zh','ch','sh','r','z','c','s','y','w'],
+ '韵母（24）':['a','o','e','i','u','ü','ai','ei','ui','ao','ou','iu','ie','üe','er','an','en','in','un','ün','ang','eng','ing','ong'],
+ '整体认读音节（16）':['zhi','chi','shi','ri','zi','ci','si','yi','wu','yu','ye','yue','yuan','yin','yun','ying']
+};
+
+/* ================================================================
+   数据 — 英语单词库
+   ================================================================ */
+const WORDS={
+ animals:{name:'动物 Animals',color:'#d97757',list:[
+  ['cat','/kæt/','猫','The cat is cute. 这只猫很可爱。'],['dog','/dɒɡ/','狗','The dog can run fast. 狗跑得快。'],
+  ['bird','/bɜːd/','鸟','A bird is singing. 一只鸟在唱歌。'],['fish','/fɪʃ/','鱼','Fish swim in water. 鱼在水里游。'],
+  ['rabbit','/ˈræbɪt/','兔子','The rabbit likes carrots. 兔子喜欢胡萝卜。'],['tiger','/ˈtaɪɡə/','老虎','The tiger is strong. 老虎很强壮。'],
+  ['lion','/ˈlaɪən/','狮子','The lion is the king. 狮子是百兽之王。'],['panda','/ˈpændə/','熊猫','Pandas love bamboo. 熊猫爱吃竹子。'],
+  ['monkey','/ˈmʌŋki/','猴子','Monkeys like bananas. 猴子喜欢香蕉。'],['elephant','/ˈelɪfənt/','大象','The elephant has a long nose. 大象鼻子长。']]},
+ food:{name:'食物 Food',color:'#e67e22',list:[
+  ['apple','/ˈæpl/','苹果','An apple a day. 一天一苹果。'],['banana','/bəˈnɑːnə/','香蕉','The banana is yellow. 香蕉是黄色的。'],
+  ['milk','/mɪlk/','牛奶','I drink milk every day. 我每天喝牛奶。'],['bread','/bred/','面包','Bread for breakfast. 早餐吃面包。'],
+  ['egg','/eɡ/','鸡蛋','I like boiled eggs. 我喜欢煮鸡蛋。'],['rice','/raɪs/','米饭','We eat rice for lunch. 午饭我们吃米饭。'],
+  ['cake','/keɪk/','蛋糕','Happy birthday cake! 生日蛋糕！'],['water','/ˈwɔːtə/','水','Drink more water. 多喝水。'],
+  ['juice','/dʒuːs/','果汁','Orange juice is sweet. 橙汁很甜。'],['noodle','/ˈnuːdl/','面条','Noodles are long. 面条长长的。']]},
+ colors:{name:'颜色 Colors',color:'#9b59b6',list:[
+  ['red','/red/','红色','The apple is red. 苹果是红色的。'],['yellow','/ˈjeləʊ/','黄色','The sun is yellow. 太阳是黄色的。'],
+  ['blue','/bluː/','蓝色','The sky is blue. 天空是蓝色的。'],['green','/ɡriːn/','绿色','The grass is green. 草是绿色的。'],
+  ['pink','/pɪŋk/','粉色','The flower is pink. 花是粉色的。'],['purple','/ˈpɜːpl/','紫色','Grapes are purple. 葡萄是紫色的。'],
+  ['orange','/ˈɒrɪndʒ/','橙色','The orange is orange. 橙子是橙色的。'],['black','/blæk/','黑色','The night is black. 夜晚是黑色的。'],
+  ['white','/waɪt/','白色','Snow is white. 雪是白色的。'],['brown','/braʊn/','棕色','The bear is brown. 熊是棕色的。']]},
+ numbers:{name:'数字 Numbers',color:'#16a085',list:[
+  ['one','/wʌn/','一','One little finger. 一根小手指。'],['two','/tuː/','二','Two eyes see. 两只眼睛看。'],
+  ['three','/θriː/','三','Three little pigs. 三只小猪。'],['four','/fɔː/','四','Four seasons in a year. 一年有四季。'],
+  ['five','/faɪv/','五','Five stars shine. 五颗星星闪。'],['six','/sɪks/','六','Six ducks swim. 六只鸭子游。'],
+  ['seven','/ˈsevn/','七','Seven days a week. 一周有七天。'],['eight','/eɪt/','八','Eight legs on a spider. 蜘蛛八条腿。'],
+  ['nine','/naɪn/','九','Nine balloons fly. 九个气球飞。'],['ten','/ten/','十','Ten toes on my feet. 我有十个脚趾头。']]},
+ family:{name:'家庭 Family',color:'#788c5d',list:[
+  ['father','/ˈfɑːðə/','爸爸','My father is tall. 我爸爸很高。'],['mother','/ˈmʌðə/','妈妈','My mother is kind. 我妈妈很温柔。'],
+  ['brother','/ˈbrʌðə/','兄弟','My brother plays ball. 我哥哥打球。'],['sister','/ˈsɪstə/','姐妹','My sister sings well. 我姐姐唱歌好。'],
+  ['grandpa','/ˈɡrænpɑː/','爷爷','Grandpa tells stories. 爷爷讲故事。'],['grandma','/ˈɡrænmɑː/','奶奶','Grandma cooks well. 奶奶做饭香。'],
+  ['uncle','/ˈʌŋkl/','叔叔','My uncle drives a car. 我叔叔开车。'],['aunt','/ɑːnt/','阿姨','My aunt is nice. 我阿姨很好。'],
+  ['baby','/ˈbeɪbi/','宝宝','The baby is sleeping. 宝宝在睡觉。'],['family','/ˈfæməli/','家庭','I love my family. 我爱我家。']]},
+ daily:{name:'日常 Daily',color:'#6a9bcc',list:[
+  ['book','/bʊk/','书','Open your book. 打开你的书。'],['pen','/pen/','钢笔','I write with a pen. 我用钢笔写字。'],
+  ['bag','/bæɡ/','书包','My bag is heavy. 我的书包很重。'],['desk','/desk/','书桌','The desk is clean. 书桌很干净。'],
+  ['chair','/tʃeə/','椅子','Sit on the chair. 坐在椅子上。'],['door','/dɔː/','门','Close the door. 关上门。'],
+  ['window','/ˈwɪndəʊ/','窗户','Open the window. 打开窗户。'],['ball','/bɔːl/','球','Kick the ball. 踢球。'],
+  ['car','/kɑː/','汽车','The car is fast. 汽车很快。'],['bus','/bʌs/','公交车','We go by bus. 我们坐公交车去。']]}
+};
+const ALL_WORDS=Object.entries(WORDS).flatMap(([k,v])=>v.list.map(w=>({cat:k,catName:v.name,word:w[0],phon:w[1],mean:w[2],ex:w[3]})));
+
+/* ================================================================
+   数据 — 记账
+   ================================================================ */
+const CATS={
+ out:[['餐饮','#e67e22'],['交通','#3498db'],['购物','#e84393'],['居住','#8e6fbf'],['医疗','#e74c3c'],['教育','#16a085'],['娱乐','#f39c12'],['人情','#d35400'],['其他','#7f8c8d']],
+ in:[['工资','#27ae60'],['兼职','#2ecc71'],['理财','#c9a227'],['红包','#e74c3c'],['其他','#7f8c8d']]
+};
+const catColor=(type,name)=>(CATS[type].find(c=>c[0]===name)||['','#7f8c8d'])[1];
+
+const Money={
+  list(){return store.get('expenses',[])},
+  save(l){store.set('expenses',l)},
+  add(rec){const l=this.list();l.unshift(rec);this.save(l)},
+  del(id){this.save(this.list().filter(r=>r.id!==id))},
+  byMonth(m){return this.list().filter(r=>r.date.startsWith(m))},
+  sum(list,type){return list.filter(r=>r.type===type).reduce((s,r)=>s+r.amount,0)}
+};
+
+/* ---------- 进度存储 ---------- */
+const Progress={
+  kids(){return new Set(store.get('kids_done',[]))},
+  kidsToggle(zi){const s=this.kids();s.has(zi)?s.delete(zi):s.add(zi);store.set('kids_done',[...s]);return s.has(zi)},
+  en(){return new Set(store.get('en_done',[]))},
+  enToggle(w){const s=this.en();s.has(w)?s.delete(w):s.add(w);store.set('en_done',[...s]);return s.has(w)},
+  favs(){return new Set(store.get('gx_favs',[]))},
+  favToggle(id){const s=this.favs();s.has(id)?s.delete(id):s.add(id);store.set('gx_favs',[...s]);return s.has(id)}
+};
+
+/* ================================================================
+   路由 & 框架
+   ================================================================ */
+const MODULES=[
+ {id:'home',name:'首页',icon:'home',color:''},
+ {id:'money',name:'记账',icon:'money',color:'o'},
+ {id:'guoxue',name:'国学经典',icon:'book',color:'r'},
+ {id:'kids',name:'幼儿启蒙',icon:'blocks',color:'g'},
+ {id:'english',name:'英语学习',icon:'globe',color:'b'}
+];
+const App={route:'home',moneyMonth:monthStr(new Date()),addType:'out',addCat:'餐饮',gxReading:null,gxCat:'全部',kidsTab:'hanzi',enCat:'animals',gxFont:17,showPinyin:true};
+
+function renderNav(){
+  $('#nav').innerHTML=MODULES.map(m=>`
+    <button class="nav-item ${App.route===m.id?'active':''}" data-mod="${m.id}" onclick="nav('${m.id}')">
+      ${icon(m.icon)}<span>${m.name}</span>
+    </button>`).join('');
+  $('#tabbar').innerHTML=MODULES.map(m=>`
+    <button class="tab-item ${App.route===m.id?'active':''}" onclick="nav('${m.id}')">
+      ${icon(m.icon)}<span>${m.name}</span>
+    </button>`).join('');
+  const m=MODULES.find(x=>x.id===App.route);
+  $('#crumb').textContent=m?m.name:'首页';
+}
+window.nav=function(r){if(location.hash==='#/'+r){render()}else location.hash='#/'+r};
+window.addEventListener('hashchange',render);
+
+function render(){
+  const parts=(location.hash.replace('#/','')||'home').split('/');
+  const r=parts[0];
+  App.route=MODULES.some(m=>m.id===r)?r:'home';
+  /* 处理深层路由：#/guoxue/<classic_id> */
+  if(App.route==='guoxue'&&parts[1]&&CLASSICS.some(c=>c.id===parts[1])){App.gxReading=parts[1]}
+  renderNav();
+  const view=$('#view');
+  view.innerHTML='';
+  ({home:renderHome,money:renderMoney,guoxue:renderGuoxue,kids:renderKids,english:renderEnglish})[App.route](view);
+  window.scrollTo({top:0});
+}
+
+/* ---------- 主题 ---------- */
+function applyTheme(t){
+  document.documentElement.dataset.theme=t;store.set('theme',t);
+  const label=t==='dark'?'浅色模式':'深色模式';
+  $('#themeBtn').innerHTML=icon(t==='dark'?'sun':'moon')+`<span>${label}</span>`;
+  $('#mThemeBtn').innerHTML=icon(t==='dark'?'sun':'moon');
+}
+function toggleTheme(){applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')}
+
+/* ================================================================
+   模块一：首页
+   ================================================================ */
+function dayOfYear(){const n=new Date(),s=new Date(n.getFullYear(),0,0);return Math.floor((n-s)/864e5)}
+function dailyQuote(){return QUOTES[dayOfYear()%QUOTES.length]}
+
+function renderHome(view){
+  const h=new Date().getHours();
+  const greet=h<6?'夜深了':h<9?'早上好':h<12?'上午好':h<14?'中午好':h<18?'下午好':'晚上好';
+  const m=monthStr(new Date());
+  const mlist=Money.byMonth(m);
+  const out=Money.sum(mlist,'out'),inc=Money.sum(mlist,'in');
+  const q=dailyQuote();
+  const kd=Progress.kids().size,ed=Progress.en().size;
+  const kTotal=HANZI.length+20+COLORS.length,eTotal=ALL_WORDS.length;
+  const now=new Date();
+  const dateStr=`${now.getMonth()+1}月${now.getDate()}日 星期${WEEK[now.getDay()]}`;
+  view.innerHTML=`
+  <section class="hero card fade-in">
+    <h2>${greet}，欢迎回到<em>一隅</em></h2>
+    <p>今天是 ${dateStr} · 记账 ${mlist.length} 笔 · 启蒙已学 ${kd} 个 · 单词已掌握 ${ed} 个</p>
+  </section>
+  <div class="dash-grid">
+    <div class="dash-card card span-7 fade-in" style="animation-delay:.05s">
+      <div class="dc-head"><h3>${icon('money','color:var(--accent)')} 本月财务</h3>
+        <button class="more" onclick="nav('money')">查看明细 ${icon('chr')}</button></div>
+      <div class="mini-money">
+        <div class="mm"><div class="k">支出</div><div class="v out">${fmt(out)}</div></div>
+        <div class="mm"><div class="k">收入</div><div class="v in">${fmt(inc)}</div></div>
+        <div class="mm"><div class="k">结余</div><div class="v" style="color:${inc-out>=0?'var(--green)':'var(--red)'}">${fmt(inc-out)}</div></div>
+      </div>
+    </div>
+    <div class="dash-card card span-5 fade-in quote-card" style="animation-delay:.1s">
+      <div class="dc-head"><h3>${icon('book','color:var(--red)')} 每日一句</h3>
+        <button class="more" onclick="nav('guoxue')">读经典 ${icon('chr')}</button></div>
+      <div class="quote-big">${esc(q[0])}</div>
+      <div class="quote-src">—— ${esc(q[1])}</div>
+    </div>
+    <div class="dash-card card span-7 fade-in" style="animation-delay:.15s">
+      <div class="dc-head"><h3>${icon('trend','color:var(--green)')} 学习进度</h3></div>
+      <div class="learn-bars">
+        <div class="lb"><div class="row"><span>幼儿启蒙（汉字 / 数字 / 颜色）</span><b>${kd} / ${kTotal}</b></div>
+          <div class="progress"><i style="width:${kTotal?Math.round(kd/kTotal*100):0}%"></i></div></div>
+        <div class="lb"><div class="row"><span>英语单词（已掌握）</span><b>${ed} / ${eTotal}</b></div>
+          <div class="progress"><i style="width:${Math.round(ed/eTotal*100)}%;background:linear-gradient(90deg,var(--blue),#93b8dd)"></i></div></div>
+      </div>
+    </div>
+    <div class="dash-card card span-5 fade-in" style="animation-delay:.2s">
+      <div class="dc-head"><h3>${icon('spark','color:var(--gold)')} 快捷操作</h3></div>
+      <div class="quick-grid">
+        <button class="quick" onclick="nav('money')"><div class="qi o">${icon('plus')}</div><span>记一笔</span></button>
+        <button class="quick" onclick="nav('guoxue')"><div class="qi r">${icon('book')}</div><span>读经典</span></button>
+        <button class="quick" onclick="nav('kids')"><div class="qi g">${icon('blocks')}</div><span>学汉字</span></button>
+        <button class="quick" onclick="nav('english')"><div class="qi b">${icon('globe')}</div><span>背单词</span></button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   模块二：记账
+   ================================================================ */
+function shiftMonth(delta){
+  const [y,m]=App.moneyMonth.split('-').map(Number);
+  const d=new Date(y,m-1+delta,1);
+  App.moneyMonth=monthStr(d);renderMoney($('#view'));
+}
+function monthLabel(m){const [y,mm]=m.split('-');return `${y}年${Number(mm)}月`}
+
+function donutSVG(parts){
+  const total=parts.reduce((s,p)=>s+p.v,0);
+  if(total<=0)return '';
+  let off=25;
+  const segs=parts.map(p=>{
+    const pc=p.v/total*100;
+    const s=`<circle r="15.9155" cx="21" cy="21" fill="none" stroke="${p.color}" stroke-width="4.5" stroke-dasharray="${pc.toFixed(2)} 100" stroke-dashoffset="${off.toFixed(2)}"/>`;
+    off=(off-pc+100)%100;return s;
+  }).join('');
+  return `<svg viewBox="0 0 42 42">${segs}<text x="21" y="20" text-anchor="middle" font-size="4.6" fill="var(--ink)" font-weight="700">${fmt(total).replace('¥','')}</text><text x="21" y="25.5" text-anchor="middle" font-size="2.6" fill="var(--muted)">总支出</text></svg>`;
+}
+function barsSVG(days){
+  const max=Math.max(...days.map(d=>d.v),1);
+  const W=560,bw=W/days.length;
+  const bars=days.map((d,i)=>{
+    const h=Math.max(d.v/max*120,d.v>0?3:1);
+    const x=i*bw+bw*.22,w=bw*.56,y=132-h;
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${d.v>0?'var(--accent)':'var(--line)'}"><title>${d.label} ${fmt(d.v)}</title></rect>
+      <text x="${x+w/2}" y="${y-6}" text-anchor="middle" font-size="11" fill="var(--ink-2)" font-weight="600">${d.v>0?(d.v>=10000?(d.v/10000).toFixed(1)+'w':Math.round(d.v)):''}</text>
+      <text x="${x+w/2}" y="150" text-anchor="middle" font-size="11" fill="var(--muted)">${d.label}</text>`;
+  }).join('');
+  return `<svg class="bars" viewBox="0 0 ${W} 160">${bars}</svg>`;
+}
+
+function renderMoney(view){
+  const m=App.moneyMonth;
+  const list=Money.byMonth(m).sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
+  const out=Money.sum(list,'out'),inc=Money.sum(list,'in');
+  /* 分类占比 */
+  const byCat={};
+  list.filter(r=>r.type==='out').forEach(r=>byCat[r.cat]=(byCat[r.cat]||0)+r.amount);
+  const parts=Object.entries(byCat).map(([k,v])=>({k,v,color:catColor('out',k)})).sort((a,b)=>b.v-a.v);
+  /* 近7日 */
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const v=Money.list().filter(r=>r.date===ds&&r.type==='out').reduce((s,r)=>s+r.amount,0);
+    days.push({label:i===0?'今天':WEEK[d.getDay()],v});
+  }
+  /* 分组 */
+  const groups={};
+  list.forEach(r=>{(groups[r.date]=groups[r.date]||[]).push(r)});
+  const cats=CATS[App.addType];
+  if(!cats.some(c=>c[0]===App.addCat))App.addCat=cats[0][0];
+
+  view.innerHTML=`
+  <div class="money-stats fade-in">
+    <div class="stat card"><div class="k">${icon('trend','color:var(--red)')} 本月支出</div>
+      <div class="v" style="color:var(--red)">${fmt(out)}</div><div class="sub">${list.filter(r=>r.type==='out').length} 笔支出</div></div>
+    <div class="stat card"><div class="k">${icon('trend','color:var(--green)')} 本月收入</div>
+      <div class="v" style="color:var(--green)">${fmt(inc)}</div><div class="sub">${list.filter(r=>r.type==='in').length} 笔收入</div></div>
+    <div class="stat card"><div class="k">${icon('money','color:var(--accent)')} 本月结余</div>
+      <div class="v" style="color:${inc-out>=0?'var(--green)':'var(--red)'}">${fmt(inc-out)}</div><div class="sub">${monthLabel(m)}</div></div>
+  </div>
+
+  <div class="money-charts">
+    <div class="chart-card card fade-in" style="animation-delay:.05s">
+      <h4>支出分类占比</h4>
+      ${parts.length?`<div class="donut-wrap">${donutSVG(parts.slice(0,6))}
+        <div class="legend">${parts.slice(0,6).map(p=>`
+          <div class="li"><span class="dot" style="background:${p.color}"></span><span class="nm">${esc(p.k)}</span>
+          <b>${fmt(p.v)}</b><span class="pc">${Math.round(p.v/parts.reduce((s,x)=>s+x.v,0)*100)}%</span></div>`).join('')}</div>
+      </div>`:`<div class="empty">${icon('pie')}<p>本月暂无支出记录</p></div>`}
+    </div>
+    <div class="chart-card card fade-in" style="animation-delay:.1s">
+      <h4>近 7 日支出趋势</h4>
+      ${barsSVG(days)}
+    </div>
+  </div>
+
+  <h3 class="sec-title">${icon('plus')} 记一笔</h3>
+  <div class="add-form card fade-in" style="animation-delay:.12s">
+    <div class="seg">
+      <button class="${App.addType==='out'?'on-out':''}" onclick="setAddType('out')">支出</button>
+      <button class="${App.addType==='in'?'on-in':''}" onclick="setAddType('in')">收入</button>
+    </div>
+    <div class="form-grid">
+      <div><label class="f-label">金额</label><input id="fAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"></div>
+      <div><label class="f-label">日期</label><input id="fDate" type="date" value="${todayStr()}"></div>
+      <div class="full"><label class="f-label">分类</label>
+        <div class="chips" id="fCats">${cats.map(c=>`<button class="chip ${c[0]===App.addCat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div></div>
+      <div class="full"><label class="f-label">备注（可选）</label><input id="fNote" placeholder="一句话备注，如：工作日午餐"></div>
+    </div>
+    <div style="margin-top:18px;display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="addRecord()">${icon('check')} 保存记录</button>
+    </div>
+  </div>
+
+  <h3 class="sec-title" style="justify-content:space-between">
+    <span style="display:flex;align-items:center;gap:10px">${icon('money')} 账单明细</span>
+    <span class="month-nav">
+      <button class="icon-btn" onclick="shiftMonth(-1)">${icon('chl')}</button>
+      <b>${monthLabel(m)}</b>
+      <button class="icon-btn" onclick="shiftMonth(1)">${icon('chr')}</button>
+    </span>
+  </h3>
+  <div class="records card fade-in" style="animation-delay:.15s">
+    ${list.length?Object.entries(groups).map(([date,recs])=>{
+      const d=new Date(date+'T00:00:00');
+      const dOut=recs.filter(r=>r.type==='out').reduce((s,r)=>s+r.amount,0);
+      const dIn=recs.filter(r=>r.type==='in').reduce((s,r)=>s+r.amount,0);
+      return `<div class="day-group">
+        <div class="day-head"><span>${Number(date.slice(5,7))}月${Number(date.slice(8))}日 星期${WEEK[d.getDay()]}</span>
+          <span>${dOut?`支 ${fmt(dOut)}`:''} ${dIn?`收 ${fmt(dIn)}`:''}</span></div>
+        ${recs.map(r=>`<div class="rec">
+          <div class="badge" style="background:${catColor(r.type,r.cat)}">${esc(r.cat[0])}</div>
+          <div class="info"><div class="cat">${esc(r.cat)}</div>${r.note?`<div class="note">${esc(r.note)}</div>`:''}</div>
+          <div class="amt ${r.type}">${r.type==='out'?'-':'+'}${fmt(r.amount)}</div>
+          <button class="icon-btn del" onclick="delRecord('${r.id}')" aria-label="删除">${icon('trash')}</button>
+        </div>`).join('')}
+      </div>`}).join('')
+    :`<div class="empty">${icon('money')}<p>这个月还没有记录，从上方「记一笔」开始吧</p></div>`}
+  </div>`;
+
+  $$('#fCats .chip').forEach(b=>b.onclick=()=>{
+    App.addCat=b.dataset.cat;
+    $$('#fCats .chip').forEach(x=>x.classList.toggle('on',x===b));
+  });
+}
+window.setAddType=t=>{App.addType=t;App.addCat=CATS[t][0][0];renderMoney($('#view'))};
+window.addRecord=function(){
+  const amt=parseFloat($('#fAmt').value);
+  if(!amt||amt<=0){toast('请输入正确的金额');$('#fAmt').focus();return}
+  const date=$('#fDate').value||todayStr();
+  Money.add({id:'r'+Date.now()+Math.random().toString(36).slice(2,6),type:App.addType,amount:Math.round(amt*100)/100,cat:App.addCat,note:$('#fNote').value.trim(),date,ts:Date.now()});
+  toast('已保存');
+  if(!date.startsWith(App.moneyMonth))App.moneyMonth=date.slice(0,7);
+  renderMoney($('#view'));
+};
+window.delRecord=function(id){
+  if(confirm('确定删除这条记录吗？')){Money.del(id);toast('已删除');renderMoney($('#view'))}
+};
+
+/* ================================================================
+   模块三：国学经典
+   ================================================================ */
+function renderGuoxue(view){
+  if(App.gxReading){renderReader(view);return}
+  const q=dailyQuote();
+  const cats=['全部',...new Set(CLASSICS.map(c=>c.cat))];
+  const favs=Progress.favs();
+  const list=CLASSICS.filter(c=>App.gxCat==='全部'||c.cat===App.gxCat);
+  view.innerHTML=`
+  <div class="daily-quote card fade-in">
+    <div class="dq">${esc(q[0])}</div>
+    <div class="ds">—— ${esc(q[1])}
+      <button class="icon-btn" onclick="event.stopPropagation();rerollQuote()" title="换一句" style="vertical-align:middle;margin-left:6px">${icon('refresh')}</button>
+    </div>
+  </div>
+  <h3 class="sec-title">${icon('book')} 经典文库</h3>
+  <div class="chips" style="margin-bottom:16px">${cats.map(c=>`<button class="chip ${App.gxCat===c?'on':''}" onclick="setGxCat('${c}')">${c}</button>`).join('')}</div>
+  <div class="classic-list">
+    ${list.map(c=>`<button class="classic-item card fade-in" onclick="openClassic('${c.id}')">
+      <div class="ci-seal" style="background:${c.color}">${c.seal}</div>
+      <div style="flex:1;min-width:0">
+        <h4>${esc(c.title)} ${favs.has(c.id)?icon('star','width:14px;height:14px;color:var(--gold);vertical-align:-1px'):''}</h4>
+        <div class="meta">${esc(c.author)} · ${c.cat}</div>
+        <div class="intro">${esc(c.intro)}</div>
+      </div>
+    </button>`).join('')}
+  </div>`;
+}
+window.setGxCat=c=>{App.gxCat=c;renderGuoxue($('#view'))};
+window.rerollQuote=function(){
+  const dq=$('.daily-quote .dq'),ds=$('.daily-quote .ds');
+  let i;do{i=Math.floor(Math.random()*QUOTES.length)}while(QUOTES[i][0]===dq.textContent);
+  dq.textContent=QUOTES[i][0];
+  ds.firstChild.textContent='—— '+QUOTES[i][1];
+};
+window.openClassic=id=>{App.gxReading=id;location.hash='#/guoxue/'+id;render()};
+window.closeClassic=()=>{App.gxReading=null;location.hash='#/guoxue';render()};
+window.gxFont=d=>{App.gxFont=Math.min(24,Math.max(14,App.gxFont+d));const b=$('.r-body');if(b)b.style.fontSize=App.gxFont+'px'};
+window.toggleFav=id=>{const on=Progress.favToggle(id);toast(on?'已收藏':'已取消收藏');renderGuoxue($('#view'))};
+window.togglePinyin=()=>{App.showPinyin=!App.showPinyin;renderReader($('#view'))};
+window.readFull=function(){
+  const c=CLASSICS.find(x=>x.id===App.gxReading);
+  if(!c)return;
+  if(c.full&&CLASSICS_FULL[c.linesKey]){
+    const text=CLASSICS_FULL[c.linesKey].lines.map(l=>l.t).join('。');
+    speak(text,'zh-CN',0.75);
+  }else{
+    speak(c.body,'zh-CN',0.7);
+  }
+};
+
+function renderReader(view){
+  const c=CLASSICS.find(x=>x.id===App.gxReading);
+  if(!c){App.gxReading=null;renderGuoxue(view);return}
+  const fav=Progress.favs().has(c.id);
+  /* 全文模式：有 lines 数据则用 ruby 拼音渲染 */
+  let bodyHtml='';
+  if(c.full&&CLASSICS_FULL[c.linesKey]){
+    const cf=CLASSICS_FULL[c.linesKey];
+    const pyCls=App.showPinyin?'':'no-pinyin';
+    /* 每 2 行一组（对联/上下句），三字经每 4 句一组 */
+    const isSzj=c.linesKey==='szj';
+    const groupSz=isSzj?4:2;
+    const lines=cf.lines;
+    let groups=[];
+    for(let i=0;i<lines.length;i+=groupSz){
+      groups.push(lines.slice(i,i+groupSz));
+    }
+    bodyHtml=`<div class="r-body ${pyCls}" style="font-size:${App.gxFont}px">
+      ${groups.map(g=>`<div class="r-line">${g.map(l=>{
+        /* 拆出每个汉字对应拼音 */
+        const chars=l.t.replace(/[，。、；：！？""''（）\s]/g,'').split('');
+        const pys=l.p.split(/\s+/);
+        let rubys=chars.map((ch,i)=>{
+          const py=pys[i]||'';
+          return py?`<ruby>${ch}<rt>${py}</rt></ruby>`:`<span>${ch}</span>`;
+        }).join('');
+        /* 保留标点：重新拼入原句中标点 */
+        let result='',ci=0,pi=0;
+        for(let k=0;k<l.t.length;k++){
+          const ch=l.t[k];
+          if(/[，。、；：！？""''（）\s]/.test(ch)){result+=ch}
+          else{result+=pys[pi]?`<ruby>${ch}<rt>${pys[pi]}</rt></ruby>`:`<span>${ch}</span>`;pi++}
+        }
+        return result;
+      }).join('')}</div>`).join('')}
+    </div>`;
+  }else{
+    bodyHtml=`<div class="r-body ${c.poem?'poem':''}" style="font-size:${App.gxFont}px">${esc(c.body)}</div>`;
+  }
+  /* 拼音切换按钮 + 全文朗读按钮（仅全文模式显示） */
+  const pyBtn=c.full?`<button class="icon-btn" onclick="togglePinyin()" title="拼音开关" style="width:38px;height:38px;font-size:13px;font-weight:700">${App.showPinyin?'拼':'拼✕'}</button>`:'';
+  const readBtn=c.full?`<button class="icon-btn" onclick="readFull()" title="全文朗读" style="width:38px;height:38px">${icon('vol')}</button>`:`<button class="icon-btn" onclick="speak(this.dataset.t,'zh-CN',0.7)" data-t="${esc(c.title)}" title="朗读标题" style="width:38px;height:38px">${icon('vol')}</button>`;
+  view.innerHTML=`
+  <div class="read-head fade-in">
+    <button class="btn btn-ghost" onclick="closeClassic()">${icon('back')} 返回文库</button>
+    <h2>${esc(c.title)}</h2>
+    <div class="font-ctl"><button onclick="gxFont(-1)">A−</button><button onclick="gxFont(1)">A＋</button></div>
+    ${pyBtn}
+    <button class="icon-btn fav-mark ${fav?'on':''}" onclick="toggleFav('${c.id}')" title="收藏" style="width:38px;height:38px">${icon('star')}</button>
+    ${readBtn}
+  </div>
+  <div class="reader card fade-in" style="animation-delay:.05s">
+    <div class="r-title">${esc(c.title)}</div>
+    <div class="r-author">${esc(c.author)}</div>
+    ${c.full&&CLASSICS_FULL[c.linesKey]?`<div class="r-intro" style="font-size:13px;color:var(--muted);margin-bottom:12px">${esc(CLASSICS_FULL[c.linesKey].intro)}</div>`:''}
+    ${bodyHtml}
+  </div>`;
+}
+
+/* ================================================================
+   模块四：幼儿启蒙
+   ================================================================ */
+const KID_TOTAL=HANZI.length+20+COLORS.length;
+function renderKids(view){
+  const done=Progress.kids();
+  const tabs=[['hanzi','学汉字'],['numbers','认数字'],['colors','识颜色'],['pinyin','拼音岛']];
+  view.innerHTML=`
+  <div class="learn-progress card fade-in">
+    <span class="txt">学习进度 <b>${done.size}</b> / ${KID_TOTAL}</span>
+    <div class="progress"><i style="width:${Math.round(done.size/KID_TOTAL*100)}%;background:linear-gradient(90deg,var(--green),#9ab57e)"></i></div>
+  </div>
+  <div class="learn-tabs">${tabs.map(t=>`<button class="chip ${App.kidsTab===t[0]?'on':''}" onclick="setKidsTab('${t[0]}')">${t[1]}</button>`).join('')}</div>
+  <div id="kidsBody"></div>`;
+  const body=$('#kidsBody');
+  if(App.kidsTab==='hanzi'){
+    body.innerHTML=`<div class="card-grid">${HANZI.map((h,i)=>`
+      <div class="flip" data-zi="${h[0]}">
+        <div class="card-tools">
+          <button class="icon-btn" onclick="event.stopPropagation();speak('${h[0]}，${h[2]}')" title="读一读">${icon('vol')}</button>
+          <button class="icon-btn kdone ${done.has(h[0])?'done':''}" onclick="event.stopPropagation();toggleKid(this,'${h[0]}')" title="学会了">${icon('check')}</button>
+        </div>
+        <div class="flip-inner" onclick="this.parentElement.classList.toggle('flipped')">
+          <div class="face"><div class="zi">${h[0]}</div></div>
+          <div class="face back"><div class="py">${h[1]}</div><div class="zi" style="font-size:34px">${h[0]}</div><div class="wd">${h[2]}</div></div>
+        </div>
+      </div>`).join('')}</div>`;
+  }else if(App.kidsTab==='numbers'){
+    body.innerHTML=`<div class="card-grid">${Array.from({length:20},(_,i)=>i+1).map(n=>`
+      <div class="flip" data-zi="num${n}">
+        <div class="card-tools">
+          <button class="icon-btn" onclick="event.stopPropagation();speak('${NUM_WORDS[n]}')" title="读一读">${icon('vol')}</button>
+          <button class="icon-btn kdone ${done.has('num'+n)?'done':''}" onclick="event.stopPropagation();toggleKid(this,'num${n}')" title="学会了">${icon('check')}</button>
+        </div>
+        <div class="flip-inner" onclick="this.parentElement.classList.toggle('flipped')">
+          <div class="face"><div class="num-big">${n}</div>
+            <div class="dots">${'<i></i>'.repeat(Math.min(n,10))}${n>10?'<i style="background:var(--red)"></i>'.repeat(n-10):''}</div></div>
+          <div class="face back"><div class="zi" style="font-size:38px">${NUM_WORDS[n]}</div><div class="py">${NUM_EN[n]}</div></div>
+        </div>
+      </div>`).join('')}</div>`;
+  }else if(App.kidsTab==='colors'){
+    body.innerHTML=`<div class="card-grid">${COLORS.map(c=>`
+      <div class="color-tile" style="background:${c[3]};color:${c[4]}" data-zi="color${c[0]}" onclick="speak('${c[0]}');this.style.transform='scale(.97)';setTimeout(()=>this.style.transform='',150)">
+        <div class="card-tools">
+          <button class="icon-btn kdone ${done.has('color'+c[0])?'done':''}" style="color:${c[4]}" onclick="event.stopPropagation();toggleKid(this,'color${c[0]}')" title="认识了">${icon('check')}</button>
+        </div>
+        <div class="cn">${c[0]}</div>
+        <div class="en">${c[1]} · ${c[2]}</div>
+      </div>`).join('')}</div>
+      <p style="margin-top:14px;font-size:13px;color:var(--muted)">点一点色块，听听颜色怎么读。</p>`;
+  }else{
+    body.innerHTML=Object.entries(PINYIN).map(([g,list])=>`
+      <div class="group-label">${g}</div>
+      <div class="py-grid">${list.map(p=>`<button class="py-cell" onclick="speak('${p}')">${p}<small>点我读</small></button>`).join('')}</div>
+    `).join('');
+  }
+}
+window.setKidsTab=t=>{App.kidsTab=t;renderKids($('#view'))};
+window.toggleKid=function(btn,key){
+  const on=Progress.kidsToggle(key);
+  btn.classList.toggle('done',on);
+  const done=Progress.kids();
+  const lp=$('.learn-progress');
+  if(lp){lp.querySelector('.txt b').textContent=done.size;lp.querySelector('.progress i').style.width=Math.round(done.size/KID_TOTAL*100)+'%'}
+  if(on)toast('太棒了，又学会一个');
+};
+
+/* ================================================================
+   模块五：英语学习
+   ================================================================ */
+function renderEnglish(view){
+  const done=Progress.en();
+  const dw=ALL_WORDS[dayOfYear()%ALL_WORDS.length];
+  const cat=WORDS[App.enCat];
+  view.innerHTML=`
+  <div class="daily-word card fade-in">
+    <div class="dw-main">
+      <div class="dw-tag">每日一词 · ${esc(dw.catName)}</div>
+      <div class="dw-word">${esc(dw.word)}</div>
+      <div class="dw-phon">${esc(dw.phon)}</div>
+      <div class="dw-mean">${esc(dw.mean)}</div>
+      <div class="dw-ex">${esc(dw.ex)}</div>
+    </div>
+    <button class="btn btn-primary" style="background:var(--blue);box-shadow:0 4px 14px rgba(106,155,204,.35)" onclick="speak('${esc(dw.word)}','en-US',0.8)">${icon('vol')} 发音</button>
+  </div>
+  <div class="learn-progress card fade-in" style="animation-delay:.05s">
+    <span class="txt">已掌握 <b>${done.size}</b> / ${ALL_WORDS.length} 词</span>
+    <div class="progress"><i style="width:${Math.round(done.size/ALL_WORDS.length*100)}%;background:linear-gradient(90deg,var(--blue),#93b8dd)"></i></div>
+  </div>
+  <div class="learn-tabs">${Object.entries(WORDS).map(([k,v])=>`<button class="chip ${App.enCat===k?'on':''}" style="${App.enCat===k?`background:${v.color};border-color:${v.color}`:''}" onclick="setEnCat('${k}')">${v.name}</button>`).join('')}</div>
+  <div class="word-grid" id="enBody">
+    ${cat.list.map(w=>`
+    <div class="wflip">
+      <div class="card-tools">
+        <button class="icon-btn" onclick="event.stopPropagation();speak('${w[0]}','en-US',0.8)" title="发音">${icon('vol')}</button>
+        <button class="icon-btn edone ${done.has(w[0])?'done':''}" style="${done.has(w[0])?'color:var(--blue);background:var(--blue-soft)':''}" onclick="event.stopPropagation();toggleEn(this,'${w[0]}')" title="已掌握">${icon('check')}</button>
+      </div>
+      <div class="flip-inner" onclick="this.parentElement.classList.toggle('flipped')">
+        <div class="face wface"><div class="word">${w[0]}</div><div class="phon">${w[1]}</div></div>
+        <div class="face back wface"><div class="mean">${w[2]}</div><div class="ex">${esc(w[3].split('. ')[0])}.<i>${esc(w[3].split('. ').slice(1).join('. '))}</i></div></div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+window.setEnCat=k=>{App.enCat=k;renderEnglish($('#view'))};
+window.toggleEn=function(btn,w){
+  const on=Progress.enToggle(w);
+  btn.classList.toggle('done',on);
+  btn.style.color=on?'var(--blue)':'';btn.style.background=on?'var(--blue-soft)':'';
+  const done=Progress.en();
+  const lp=$$('.learn-progress')[0];
+  if(lp){lp.querySelector('.txt b').textContent=done.size;lp.querySelector('.progress i').style.width=Math.round(done.size/ALL_WORDS.length*100)+'%'}
+  if(on)toast('Well done!');
+};
+
+/* ================================================================
+   启动
+   ================================================================ */
+(function init(){
+  applyTheme(store.get('theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+  $('#themeBtn').onclick=toggleTheme;
+  $('#mThemeBtn').onclick=toggleTheme;
+  const now=new Date();
+  $('#topDate').textContent=`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 星期${WEEK[now.getDay()]}`;
+  render();
+  /* 注册 PWA Service Worker */
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>

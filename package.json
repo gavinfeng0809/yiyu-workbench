@@ -1,0 +1,29 @@
+{
+  "name": "yiyu-workbench",
+  "displayName": "一隅",
+  "version": "1.0.0",
+  "description": "个人工作台 - 记账/国学经典/幼儿启蒙/英语学习",
+  "main": "index.js",
+  "scripts": {
+    "build": "bash build-apk.sh",
+    "prepare": "bash build-apk.sh --prepare-only"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "YiYu",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^13.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-whitelist": {}
+    }
+  }
+}
