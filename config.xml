@@ -16,10 +16,6 @@
         <preference name="android-targetSdkVersion" value="34" />
         <preference name="AndroidInsecureFileModeEnabled" value="false" />
         <preference name="android-compileSdkVersion" value="34" />
-        <preference name="BackgroundColor" value="0xfff5f3ec" />
-        <preference name="StatusBarOverlaysWebView" value="false" />
-        <preference name="StatusBarBackgroundColor" value="#f5f3ec" />
-        <preference name="StatusBarStyle" value="default" />
     </platform>
 
     <!-- 允许导航和内容加载 -->
