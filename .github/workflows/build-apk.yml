@@ -26,8 +26,10 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install Cordova
-      run: npm install -g cordova@latest
+    - name: Install Cordova and project dependencies
+      run: |
+        npm install -g cordova@latest
+        npm install
 
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
@@ -56,7 +58,7 @@ jobs:
         perl -i -0pe 's/\}\)\(\);\s*\n<\/script>/}\n  if(typeof cordova!=="undefined"){document.addEventListener("deviceready",initApp,false)}else{initApp()}\n<\/script>/' "$INDEX"
 
     - name: Add Android platform
-      run: cordova platform add android --no-resources
+      run: cordova platform add android@13 --save
 
     - name: Build APK
       run: cordova build android --no-telemetry
