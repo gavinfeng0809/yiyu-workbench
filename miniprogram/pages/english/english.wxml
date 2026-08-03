@@ -1,0 +1,52 @@
+<view class="page {{theme}}">
+  <!-- 子导航 -->
+  <view class="subnav">
+    <view class="sn-btn" bindtap="goPhonetics">音标学习</view>
+    <view class="sn-btn err" bindtap="goErrorBook">错题本 ({{errCount}})</view>
+  </view>
+
+  <!-- 每日一词 -->
+  <view class="card daily" wx:if="{{daily}}">
+    <view class="d-tag">每日一词 · {{daily.catName}}</view>
+    <view class="d-word">{{daily.word}}</view>
+    <view class="d-phon">{{daily.phon}}</view>
+    <view class="d-mean">{{daily.mean}}</view>
+    <view class="d-ex">{{daily.ex}}</view>
+    <view class="d-speak btn blue" bindtap="speak" data-w="{{daily.word}}">🔊 发音</view>
+  </view>
+
+  <!-- 进度 -->
+  <view class="card">
+    <view class="p-txt">已掌握 <text class="p-num">{{enDone}}</text> / {{total}} 词</view>
+    <view class="progress-bar"><i style="width:{{total ? enDone / total * 100 : 0}}%"></i></view>
+  </view>
+
+  <!-- 分类 -->
+  <view class="chips">
+    <view wx:for="{{cats}}" wx:key="key" class="chip {{activeCat === item.key ? 'on' : ''}}"
+      style="{{activeCat === item.key ? 'background:' + item.color + ';border-color:' + item.color : ''}}"
+      data-key="{{item.key}}" bindtap="setCat">{{item.name}}</view>
+  </view>
+
+  <!-- 单词翻卡 -->
+  <view class="word-grid">
+    <view wx:for="{{catWords}}" wx:key="index" class="w-card {{flipped[index] ? 'flipped' : ''}}">
+      <view class="w-tools">
+        <view class="w-tool" catchtap="speak" data-w="{{item.w0}}">🔊</view>
+        <view class="w-tool {{done[item.w0] ? 'done' : ''}}" catchtap="markDone" data-w="{{item.w0}}">{{done[item.w0] ? '✓' : '记'}}</view>
+      </view>
+      <view class="w-inner" bindtap="flip" data-i="{{index}}">
+        <block wx:if="{{!flipped[index]}}">
+          <view class="w-word">{{item.w0}}</view>
+          <view class="w-phon">{{item.w1}}</view>
+        </block>
+        <block wx:else>
+          <view class="w-mean">{{item.w2}}</view>
+          <view class="w-ex">{{item.w3}}</view>
+          <view class="w-err" catchtap="addErr" data-w="{{item.w0}}" data-p="{{item.w1}}" data-m="{{item.w2}}" data-c="{{activeCat}}">+ 加入错题本</view>
+        </block>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{!catWords.length}}">该分类暂无单词</view>
+</view>

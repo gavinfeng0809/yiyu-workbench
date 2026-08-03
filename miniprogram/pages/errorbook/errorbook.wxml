@@ -1,0 +1,25 @@
+<view class="page {{theme}}">
+  <view wx:if="{{list.length}}" class="err-list">
+    <view class="err-item card" wx:for="{{list}}" wx:key="word">
+      <view style="flex:1;min-width:0">
+        <view class="e-top">
+          <text class="e-word">{{item.word}}</text>
+          <text class="e-phon">{{item.phonetic}}</text>
+        </view>
+        <view class="e-mean">{{item.meaning}}</view>
+        <view class="e-meta">来自 {{item.cat}} · {{item.review_count}} 次复习</view>
+      </view>
+      <view class="e-actions">
+        <view class="e-btn" bindtap="speak" data-w="{{item.word}}">🔊</view>
+        <view class="e-btn ok" bindtap="review" data-w="{{item.word}}">✓</view>
+        <view class="e-btn del" bindtap="del" data-w="{{item.word}}">×</view>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:else>错题本是空的，单词卡背面点「加入错题本」来收集</view>
+
+  <view class="err-toolbar" wx:if="{{list.length}}">
+    <view class="btn green" bindtap="reviewAll">复习全部 ({{list.length}})</view>
+    <view class="btn danger" bindtap="clearAll">清空</view>
+  </view>
+</view>

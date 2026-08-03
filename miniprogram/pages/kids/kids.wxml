@@ -1,0 +1,53 @@
+<view class="page {{theme}}">
+  <!-- tab -->
+  <view class="chips">
+    <view wx:for="{{tabs}}" wx:key="key" class="chip {{tab === item.key ? 'on' : ''}}"
+      data-key="{{item.key}}" bindtap="setTab">{{item.label}}</view>
+  </view>
+
+  <!-- 汉字翻卡 -->
+  <block wx:if="{{tab === 'hanzi'}}">
+    <view class="hanzi-grid">
+      <view wx:for="{{hanzi}}" wx:key="index" class="hz-card {{done[index] ? 'done' : ''}}"
+        data-i="{{index}}" bindtap="flip">
+        <view class="hz-char">{{item[0]}}</view>
+        <view class="hz-pin">{{item[1]}}</view>
+        <view class="hz-w">{{item[2]}}</view>
+        <view wx:if="{{done[index]}}" class="hz-tick">✓</view>
+      </view>
+    </view>
+    <view class="card-sub" style="text-align:center;padding:20rpx">点按卡片翻面：汉字 → 拼音 → 组词，再点一次标记已学会</view>
+  </block>
+
+  <!-- 数字 -->
+  <block wx:if="{{tab === 'num'}}">
+    <view class="num-grid">
+      <view wx:for="{{nums}}" wx:key="n" class="num-card">
+        <view class="num-big">{{item.cn}}</view>
+        <view class="num-en">{{item.en}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 颜色 -->
+  <block wx:if="{{tab === 'color'}}">
+    <view class="color-grid">
+      <view wx:for="{{colors}}" wx:key="index" class="color-card">
+        <view class="color-swatch" style="background:{{item[3]}}"></view>
+        <view class="color-name">{{item[0]}}</view>
+        <view class="color-pin">{{item[1]}}</view>
+        <view class="color-en">{{item[2]}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 拼音 -->
+  <block wx:if="{{tab === 'pinyin'}}">
+    <view wx:for="{{pinyinKeys}}" wx:key="*this" class="card py-section">
+      <view class="card-title">{{item}}</view>
+      <view class="py-grid">
+        <view wx:for="{{pinyin[item]}}" wx:for-item="py" wx:key="*this" class="py-item">{{py}}</view>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,7 @@
+.list { padding: 0 24rpx; }
+.c-title { font-size: 30rpx; font-weight: 700; }
+.c-cat { font-size: 20rpx; color: var(--red); background: rgba(181, 84, 45, .1); padding: 4rpx 14rpx; border-radius: 999rpx; }
+.c-author { font-size: 22rpx; color: var(--muted); margin-top: 4rpx; }
+.c-intro { font-size: 24rpx; color: var(--ink-2); margin-top: 6rpx; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.fav-btn { font-size: 40rpx; color: var(--muted); padding: 10rpx; flex: none; }
+.fav-btn.on { color: var(--gold); }

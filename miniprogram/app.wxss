@@ -1,0 +1,111 @@
+/* 一隅工作台 · 全局样式（亮/暗主题 CSS 变量） */
+.page {
+  --bg: #f5f3ec;
+  --surface: #ffffff;
+  --surface2: #faf8f2;
+  --ink: #2c2a26;
+  --ink-2: #6b655c;
+  --muted: #9a9387;
+  --line: #e8e4da;
+  --red: #b5542d;
+  --accent: #d97757;
+  --green: #788c5d;
+  --blue: #6a9bcc;
+  --gold: #c9a227;
+  --shadow-sm: 0 2px 8px rgba(60, 50, 30, .08);
+  --radius: 14px;
+  --radius-sm: 10px;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 28rpx;
+  line-height: 1.6;
+  padding-bottom: 140rpx;
+  box-sizing: border-box;
+}
+.page.dark {
+  --bg: #131311;
+  --surface: #1d1c19;
+  --surface2: #23211d;
+  --ink: #ece9e0;
+  --ink-2: #a29b8e;
+  --muted: #6f6a5e;
+  --line: #33302a;
+  --red: #e07a52;
+  --accent: #e8997a;
+  --green: #93a878;
+  --blue: #86b4de;
+  --gold: #d8b84c;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+/* ---------- 基础 ---------- */
+view, text, button, input { box-sizing: border-box; }
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 30rpx;
+  margin: 0 24rpx 24rpx;
+  box-shadow: var(--shadow-sm);
+  border: 1rpx solid var(--line);
+}
+.card-title { font-size: 30rpx; font-weight: 700; margin-bottom: 16rpx; }
+.card-sub { font-size: 24rpx; color: var(--muted); }
+
+/* ---------- 按钮 ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18rpx 36rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  border: 1rpx solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  transition: all .18s;
+}
+.btn::after { border: none; }
+.btn.primary { background: var(--red); color: #fff; border: none; }
+.btn.blue { background: var(--blue); color: #fff; border: none; }
+.btn.green { background: var(--green); color: #fff; border: none; }
+.btn.ghost { background: transparent; }
+.btn.danger { color: var(--red); border-color: var(--red); background: transparent; }
+.btn-sm { padding: 10rpx 24rpx; font-size: 24rpx; }
+.btn:active { opacity: .85; transform: scale(.97); }
+
+/* ---------- 标签 chip ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 14rpx; padding: 0 24rpx 24rpx; }
+.chip {
+  padding: 12rpx 28rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  background: var(--surface);
+  border: 1rpx solid var(--line);
+  color: var(--ink-2);
+  transition: all .18s;
+}
+.chip.on { background: var(--red); color: #fff; border-color: var(--red); }
+.chip:active { transform: scale(.95); }
+
+/* ---------- 空状态 ---------- */
+.empty { text-align: center; padding: 120rpx 60rpx; color: var(--muted); font-size: 26rpx; }
+
+/* ---------- 进度条 ---------- */
+.progress-bar { height: 16rpx; background: var(--line); border-radius: 999rpx; overflow: hidden; }
+.progress-bar i { display: block; height: 100%; border-radius: 999rpx; background: linear-gradient(90deg, var(--blue), #93b8dd); transition: width .4s; }
+
+/* ---------- 列表 ---------- */
+.list-item {
+  display: flex; align-items: center; gap: 20rpx;
+  padding: 26rpx 30rpx;
+  background: var(--surface);
+  border-bottom: 1rpx solid var(--line);
+}
+.list-item:active { background: var(--surface2); }
+.seal {
+  width: 76rpx; height: 76rpx; flex: none;
+  border-radius: 18rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34rpx; font-weight: 700; color: #fff;
+}

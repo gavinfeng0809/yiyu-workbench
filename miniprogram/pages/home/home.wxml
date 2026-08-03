@@ -1,0 +1,47 @@
+<view class="page {{theme}}">
+  <!-- 头部 -->
+  <view class="hero">
+    <view class="hero-top">
+      <view>
+        <view class="hero-date">{{dateStr}} {{weekDay}}</view>
+        <view class="hero-title">一隅 · 我的小世界</view>
+      </view>
+      <view class="theme-btn" bindtap="toggleTheme">{{theme === 'dark' ? '☀' : '☾'}}</view>
+    </view>
+    <view class="quote-card" bindtap="rerollQuote">
+      <view class="quote-text">「{{quote.t}}」</view>
+      <view class="quote-src">—— {{quote.s}}　点按换一句</view>
+    </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-grid">
+    <view class="quick-item" hover-class="quick-hover" bindtap="go" data-url="/pages/money/money">
+      <view class="q-icon" style="background:#d97757">¥</view>
+      <text>记一笔</text>
+    </view>
+    <view class="quick-item" hover-class="quick-hover" bindtap="go" data-url="/pages/guoxue/guoxue">
+      <view class="q-icon" style="background:#b5542d">经</view>
+      <text>读经典</text>
+    </view>
+    <view class="quick-item" hover-class="quick-hover" bindtap="go" data-url="/pages/kids/kids">
+      <view class="q-icon" style="background:#788c5d">字</view>
+      <text>学汉字</text>
+    </view>
+    <view class="quick-item" hover-class="quick-hover" bindtap="go" data-url="/pages/english/english">
+      <view class="q-icon" style="background:#6a9bcc">词</view>
+      <text>背单词</text>
+    </view>
+  </view>
+
+  <!-- 学习概览 -->
+  <view class="card">
+    <view class="card-title">学习概览</view>
+    <view class="stat-row">
+      <view class="stat"><view class="stat-num">{{classicsCount}}</view><view class="stat-label">国学经典</view></view>
+      <view class="stat"><view class="stat-num">{{wordCount}}</view><view class="stat-label">英语词汇</view></view>
+      <view class="stat"><view class="stat-num">{{kidsDone}}</view><view class="stat-label">幼儿已学</view></view>
+      <view class="stat"><view class="stat-num">{{enDone}}</view><view class="stat-label">单词已掌握</view></view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,26 @@
+<view class="page {{theme}}">
+  <!-- 分类标签 -->
+  <view class="chips" style="position:sticky;top:0;z-index:10;background:var(--bg);padding-top:20rpx">
+    <view wx:for="{{cats}}" wx:key="*this"
+      class="chip {{activeCat === item ? 'on' : ''}}"
+      data-cat="{{item}}" bindtap="setCat">{{item}}</view>
+  </view>
+
+  <!-- 经典列表 -->
+  <view wx:if="{{list.length}}" class="list">
+    <view class="list-item" wx:for="{{list}}" wx:key="id" hover-class="none" bindtap="open" data-id="{{item.id}}">
+      <view class="seal" style="background:{{item.color}}">{{item.seal}}</view>
+      <view style="flex:1;min-width:0">
+        <view style="display:flex;align-items:center;gap:12rpx">
+          <text class="c-title">{{item.title}}</text>
+          <text class="c-cat">{{item.cat}}</text>
+        </view>
+        <view class="c-author">{{item.author}}</view>
+        <view class="c-intro">{{item.intro}}</view>
+      </view>
+      <view class="fav-btn {{item.id === item.id && favs.indexOf(item.id) >= 0 ? 'on' : ''}}"
+        catchtap="toggleFav" data-id="{{item.id}}">{{favs.indexOf(item.id) >= 0 ? '★' : '☆'}}</view>
+    </view>
+  </view>
+  <view wx:else class="empty">暂无内容</view>
+</view>

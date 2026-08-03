@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/money/money",
+    "pages/guoxue/guoxue",
+    "pages/kids/kids",
+    "pages/english/english",
+    "pages/guoxue/reader",
+    "pages/phonetics/phonetics",
+    "pages/errorbook/errorbook"
+  ],
+  "window": {
+    "navigationBarTitleText": "一隅工作台",
+    "navigationBarBackgroundColor": "#f5f3ec",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f3ec",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8a8378",
+    "selectedColor": "#b5542d",
+    "backgroundColor": "#f5f3ec",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "首页" },
+      { "pagePath": "pages/money/money", "text": "记账" },
+      { "pagePath": "pages/guoxue/guoxue", "text": "国学" },
+      { "pagePath": "pages/kids/kids", "text": "幼儿" },
+      { "pagePath": "pages/english/english", "text": "英语" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

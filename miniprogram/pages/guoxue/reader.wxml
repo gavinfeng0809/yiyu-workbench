@@ -1,0 +1,30 @@
+<view class="page {{theme}}">
+  <!-- 工具栏 -->
+  <view class="toolbar">
+    <view class="tool-group">
+      <view class="tool-btn" bindtap="fontChange" data-d="-1">小</view>
+      <view class="tool-btn active">中</view>
+      <view class="tool-btn" bindtap="fontChange" data-d="1">大</view>
+    </view>
+    <view class="tool-group">
+      <view class="tool-btn {{showPinyin ? 'on' : ''}}" bindtap="togglePinyin">拼</view>
+      <view class="tool-btn {{fav ? 'on' : ''}}" bindtap="toggleFav">{{fav ? '★' : '☆'}}</view>
+      <view class="tool-btn" bindtap="readAll">🔊</view>
+    </view>
+  </view>
+
+  <!-- 篇章信息 -->
+  <view class="head card">
+    <view class="h-title">{{classic.title}}</view>
+    <view class="h-author">{{classic.author}}</view>
+    <view class="h-intro">{{classic.intro}}</view>
+  </view>
+
+  <!-- 正文 -->
+  <view class="body">
+    <view wx:for="{{bodyLines}}" wx:key="index" class="line" data-text="{{item.t}}" bindtap="readOne">
+      <view class="line-t" style="font-size:{{fontSize * 2}}rpx">{{item.t}}</view>
+      <view wx:if="{{showPinyin && item.p}}" class="line-p" style="font-size:{{fontSize * 1.2}}rpx">{{item.p}}</view>
+    </view>
+  </view>
+</view>

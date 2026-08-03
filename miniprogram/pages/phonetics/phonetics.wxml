@@ -1,0 +1,39 @@
+<view class="page {{theme}}">
+  <!-- 元音 -->
+  <view class="py-sec">
+    <view class="py-title"><view class="dot" style="background:var(--red)"></view>元音 Monophthongs（{{vowels.length}} 个）</view>
+    <view class="py-grid">
+      <view wx:for="{{vowels}}" wx:key="sym" class="py-card v" bindtap="speak" data-word="{{item.ex}}">
+        <view class="py-sym">{{item.sym}}</view>
+        <view class="py-ex">{{item.ex}} {{item.exPhon}}</view>
+        <view class="py-mouth">{{item.mouth}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 双元音 -->
+  <view class="py-sec">
+    <view class="py-title"><view class="dot" style="background:var(--accent)"></view>双元音 Diphthongs（{{diphthongs.length}} 个）</view>
+    <view class="py-grid">
+      <view wx:for="{{diphthongs}}" wx:key="sym" class="py-card d" bindtap="speak" data-word="{{item.ex}}">
+        <view class="py-sym">{{item.sym}}</view>
+        <view class="py-ex">{{item.ex}} {{item.exPhon}}</view>
+        <view class="py-mouth">{{item.mouth}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 辅音 -->
+  <view class="py-sec">
+    <view class="py-title"><view class="dot" style="background:var(--blue)"></view>辅音 Consonants（{{consonants.length}} 个）</view>
+    <view class="py-grid">
+      <view wx:for="{{consonants}}" wx:key="sym" class="py-card c" bindtap="speak" data-word="{{item.ex}}">
+        <view class="py-sym">{{item.sym}}</view>
+        <view class="py-ex">{{item.ex}} {{item.exPhon}}</view>
+        <view class="py-mouth">{{item.mouth}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tip">点按任意音标卡 → 朗读示例单词</view>
+</view>
