@@ -1086,10 +1086,49 @@ window.toggleEn=function(btn,w){
   $('#mThemeBtn').onclick=toggleTheme;
   const now=new Date();
   $('#topDate').textContent=`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 星期${WEEK[now.getDay()]}`;
+  /* 应用本地缓存的数据包（上次拉取的热更新）— 在首次渲染之前 */
+  var hadCache=applyCachedData();
   render();
-  /* 注册 PWA Service Worker */
+  /* PWA Service Worker */
   if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+  /* 后台静默检测远程更新（不影响启动速度） */
+  setTimeout(checkDataUpdate,2000);
 })();
+
+/* ================================================================
+   数据热更新机制 — 从 GitHub Raw 拉取内容包
+   无需重装 APK，每次启动自动检测版本并静默更新
+   ================================================================ */
+var UPDATE_MANIFEST_URL='https://raw.githubusercontent.com/gavinfeng0809/yiyu-workbench/main/app-data/data-manifest.json';
+function applyCachedData(){
+  var ver=parseInt(localStorage.getItem('yiyu_dver')||'0');
+  if(!ver)return false;
+  ['pinyin_data_v2','english_data'].forEach(function(k){
+    var code=localStorage.getItem('yiyu_dc_'+k);
+    if(code){try{(new Function(code))()}catch(e){console.warn('缓存加载失败:',k,e)}}
+  });
+  return true;
+}
+function checkDataUpdate(){
+  fetch(UPDATE_MANIFEST_URL,{cache:'no-cache'}).then(function(r){return r.json()}).then(function(m){
+    var curVer=parseInt(localStorage.getItem('yiyu_dver')||'0');
+    if(m.version<=curVer)return;
+    toast('发现新数据 v'+m.version+'，正在更新...');
+    var files=m.files||[],loaded=0;
+    files.forEach(function(f){
+      fetch(f.url,{cache:'no-cache'}).then(function(r){return r.text()}).then(function(code){
+        try{(new Function(code))()}catch(e){}
+        localStorage.setItem('yiyu_dc_'+f.name,code);
+        loaded++;
+        if(loaded===files.length){
+          localStorage.setItem('yiyu_dver',String(m.version));
+          toast('内容已更新 (v'+m.version+')');
+          render();
+        }
+      }).catch(function(){loaded++});
+    });
+  }).catch(function(){/* 网络不可用，正常使用离线缓存 */});
+}
 
 /* ================================================================
    英语学习增强：扩词汇 + 音标 + 错题本

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "updated": "2026-08-03",
+  "description": "一隅工作台 内容数据包 v1 — 四书五经+唐诗+英语扩展",
+  "files": [
+    {
+      "name": "pinyin_data_v2",
+      "url": "https://raw.githubusercontent.com/gavinfeng0809/yiyu-workbench/main/app-data/pinyin_data_v2.js",
+      "desc": "四书五经+唐诗三百首 全文拼音",
+      "size_kb": 139
+    },
+    {
+      "name": "english_data",
+      "url": "https://raw.githubusercontent.com/gavinfeng0809/yiyu-workbench/main/app-data/english_data.js",
+      "desc": "英语词汇扩展(210词)+音标(44个)+错题本",
+      "size_kb": 18
+    }
+  ]
+}
